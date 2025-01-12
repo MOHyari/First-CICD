@@ -43,9 +43,12 @@ jobs:
           -var="key_name=deployer-key" \
           -out=PLAN
         working-directory: ./terraform
-
       - name: Terraform Apply
         id: apply
-        run: terraform apply PLAN
+        run: terraform apply -auto-approve PLAN
         working-directory: ./terraform
-  
+        - name: Set output
+          id: set-ip
+          run: |-
+              echo "instance_public_ip=$(terraform output instance_public_ip)" >> $GITHUB_ENV
+          working-directory: ./terraform
