@@ -6,7 +6,10 @@ variable "public_key" {
   
 }
 
-variable "private_key" {
+variable "access_key" {
+  
+}
+variable "secret_key" {
   
 }
 
