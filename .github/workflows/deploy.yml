@@ -41,11 +41,11 @@ jobs:
           -var="public_key=${{ env.PUBLIC_SSH_KEY }}" \
           -var="private_key=${{ env.PRIVATE_SSH_KEY }}" \
           -var="key_name=deployer-key" \
-          
+          -out=PLAN
         working-directory: ./terraform
       - name: Terraform Apply
         id: apply
-        run: terraform apply 
+        run: terraform apply PLAN
         working-directory: ./terraform
       - name: Set output
         id: set-ip
