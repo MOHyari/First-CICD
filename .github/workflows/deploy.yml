@@ -47,8 +47,8 @@ jobs:
         id: apply
         run: terraform apply -auto-approve PLAN
         working-directory: ./terraform
-        - name: Set output
-          id: set-ip
-          run: |-
-              echo "instance_public_ip=$(terraform output instance_public_ip)" >> $GITHUB_ENV
-          working-directory: ./terraform
+      - name: Set output
+        id: set-ip
+        run: |-
+            echo "instance_public_ip=$(terraform output instance_public_ip)" >> $GITHUB_ENV
+        working-directory: ./terraform
