@@ -1,5 +1,9 @@
 name: CI/CD with Terraform
-on: push
+on:
+  push:
+    branches:
+      - main
+
 jobs:
   deploy-infra:
     runs-on: ubuntu-latest
@@ -8,10 +12,8 @@ jobs:
     steps:
       - name: Check Code
         uses: actions/checkout@v2
-
-    ##  - name: Run Super-Linter
-    ##    uses: github/super-linter@v3
-
+      - name: Run Super-Linter
+        uses: github/super-linter@v3
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
@@ -46,6 +48,7 @@ jobs:
           -var="private_key=${{ env.PRIVATE_SSH_KEY }}" \
           -var="key_name=deployer-key" \
           -out=PLAN
+
         working-directory: ./terraform
 
       - name: Terraform Apply
