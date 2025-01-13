@@ -31,31 +31,21 @@ jobs:
           terraform init -backend-config="bucket=${{ env.TF_STATE_BUCKET_NAME }}" -backend-config="region=${{ env.AWS_REGION }}"
         working-directory: ./terraform
 
-      - name: Terraform Plan
-        id: plan
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          PRIVATE_SSH_KEY: ${{ secrets.AWS_SSH_KEY_PRIVATE }}
-          PUBLIC_SSH_KEY: ${{ secrets.AWS_SSH_KEY_PUBLIC }}
-        run: |-
-          export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
-          export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          terraform plan \
-          -var="region=us-east-1" \
-          -var="public_key=${{ env.PUBLIC_SSH_KEY }}" \
-          -var="private_key=${{ env.PRIVATE_SSH_KEY }}" \
-          -var="key_name=deployer-key" \
-          -out=PLAN
-
-        working-directory: ./terraform
-
       - name: Terraform Apply
         id: apply
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: terraform apply PLAN
+          PRIVATE_SSH_KEY: ${{ secrets.AWS_SSH_KEY_PRIVATE }}
+          PUBLIC_SSH_KEY: ${{ secrets.AWS_SSH_KEY_PUBLIC }}
+          AWS_REGION: ${{ env.AWS_REGION }}
+        run: |
+          terraform apply -auto-approve \
+            -var="region=${AWS_REGION}" \
+            -var="public_key=${PUBLIC_SSH_KEY}" \
+            -var="private_key=${PRIVATE_SSH_KEY}" \
+            -var="key_name=deployer-key"
+        
         working-directory: ./terraform
 
       - name: Set Output
