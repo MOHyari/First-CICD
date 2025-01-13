@@ -12,6 +12,8 @@ terraform {
 
 provider "aws" {
   region = var.region
+  access_key  = var.aws-access-key
+  secret_key  = var.aws-secret-key
 }
 resource "aws_instance" "servernode" {
   ami                    = "ami-0e2c8caa4b6378d8c"
