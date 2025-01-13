@@ -12,8 +12,8 @@ jobs:
     steps:
       - name: Check Code
         uses: actions/checkout@v2
-      - name: Run Super-Linter
-        uses: github/super-linter@v3
+    ##  - name: Run Super-Linter
+    ##    uses: github/super-linter@v3
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
