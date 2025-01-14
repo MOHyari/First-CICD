@@ -32,7 +32,8 @@ jobs:
           terraform init -backend-config="bucket=${{ env.TF_STATE_BUCKET_NAME }}" -backend-config="region=${{ env.AWS_REGION }}"
         working-directory: ./terraform
       - name: check sts
-        uses: aws sts get-caller-identity
+        run: |-
+          aws sts get-caller-identity
       
       - name: Terraform Plan
         id: plan
