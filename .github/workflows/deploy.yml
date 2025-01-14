@@ -31,6 +31,9 @@ jobs:
           export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
           terraform init -backend-config="bucket=${{ env.TF_STATE_BUCKET_NAME }}" -backend-config="region=${{ env.AWS_REGION }}"
         working-directory: ./terraform
+      - name: check sts
+        uses: aws sts get-caller-identity
+      
       - name: Terraform Plan
         id: plan
         run: |-
