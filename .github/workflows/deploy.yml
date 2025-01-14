@@ -18,7 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Verify AWS credentials
-        run: aws sts get-caller-identity
+        run: aws sts get-caller-identity --no-sign-request
       - name: setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
