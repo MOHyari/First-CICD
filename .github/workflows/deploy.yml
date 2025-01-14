@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Verify AWS credentials
+        run: aws sts get-caller-identity
       - name: setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
