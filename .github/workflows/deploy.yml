@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Check Code
         uses: actions/checkout@v2
-    ##  - name: Run Super-Linter
-    ##    uses: github/super-linter@v3
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
@@ -25,11 +23,12 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           TF_STATE_BUCKET_NAME: ${{ secrets.AWS_TF_STATE_BUCKET_NAME }}
+          AWS_REGION: us-east-1
           
         run: |-
           export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
           export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          terraform init -backend-config="bucket=${{ secrets.TF_STATE_BUCKET_NAME }}" -backend-config="region=${{ secrets.AWS_REGION }}"
+          terraform init -backend-config="bucket=${{ env.TF_STATE_BUCKET_NAME }}" -backend-config="region=${{ env.AWS_REGION }}"
         working-directory: ./terraform
 
       - name: Terraform Plan
@@ -59,17 +58,14 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           PRIVATE_SSH_KEY: ${{ secrets.AWS_SSH_KEY_PRIVATE }}
           PUBLIC_SSH_KEY: ${{ secrets.AWS_SSH_KEY_PUBLIC }}
-          AWS_REGION: ${{secrets.AWS_REGION}}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
 
-        run: |- 
-          export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
-          export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          export AWS_REGION=${{ secrets.AWS_REGION }}
-          terraform apply 
+        run: |-
+          terraform apply -auto-approve
         working-directory: ./terraform
 
       - name: Set Output
         id: set-ip
         run: |-
-          echo "instance_public_ip=$(terraform output instance_public_ip)" >> $GITHUB_ENV
+          echo "::set-output name=instance_public_ip::$(terraform output instance_public_ip)"
         working-directory: ./terraform
