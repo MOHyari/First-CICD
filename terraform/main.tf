@@ -6,7 +6,6 @@ terraform {
       }
     }
     backend "s3" {
-        bucket = "your-s3-bucket-name"
       key = "aws/ec2-deploy/terraform.tfstate"
     }
     
