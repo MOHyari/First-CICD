@@ -59,3 +59,4 @@ jobs:
         run: |
           echo "instance_public_ip=$(terraform output instance_public_ip)" >> $GITHUB_ENV
         working-directory: ./terraform
+###
