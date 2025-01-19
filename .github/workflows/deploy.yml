@@ -76,8 +76,10 @@ jobs:
         run: echo "SERVER_PUBLIC_IP=${{ needs.deploy-infra.outputs.SERVER_PUBLIC_IP }}" >> $GITHUB_ENV
 
       - name: Login into ECR
-        id: login-ecr  # Set the step ID
+        id: login-ecr 
         uses: aws-actions/amazon-ecr-login@v1
+        env:
+          AWS_REGION: us-east-1 
 
       - name: Build, push docker image 
         env: 
