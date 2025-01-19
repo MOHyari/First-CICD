@@ -1,3 +1,5 @@
+
+
 terraform {
     required_providers {
         aws = {
@@ -9,6 +11,14 @@ terraform {
         key = "aws/ec2-deploy/terraform.tfstate"
     }
 }
+variable "aws_access_key_id" {
+  description = "AWS Access Key ID"
+}
+
+variable "aws_secret_access_key" {
+  description = "AWS Secret Access Key"
+}
+
 
 provider "aws" {
     region     = var.region
