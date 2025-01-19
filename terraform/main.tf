@@ -52,33 +52,34 @@ resource "aws_iam_instance_profile" "ec2-profile" {
 }
 
 resource "aws_security_group" "firstgroup" {
-    egress = [
-        {
-            cidr_blocks = ["0.0.0.0/0"]
-            description = "Allow all outbound traffic"
-            from_port   = 0
-            to_port     = 0
-            protocol    = "-1"
-        }
-    ]
+    name        = "firstgroup"
+    description = "Allow SSH and HTTP traffic"
 
-    ingress = [
-        {
-            cidr_blocks = ["0.0.0.0/0"]
-            description = "Allow SSH"
-            from_port   = 22
-            to_port     = 22
-            protocol    = "tcp"
-        },
-        {
-            cidr_blocks = ["0.0.0.0/0"]
-            description = "Allow HTTP"
-            from_port   = 80
-            to_port     = 80
-            protocol    = "tcp"
-        }
-    ]
+    egress {
+        cidr_blocks = ["0.0.0.0/0"]
+        description = "Allow all outbound traffic"
+        from_port   = 0
+        to_port     = 0
+        protocol    = "-1"
+    }
+
+    ingress {
+        cidr_blocks = ["0.0.0.0/0"]
+        description = "Allow SSH"
+        from_port   = 22
+        to_port     = 22
+        protocol    = "tcp"
+    }
+
+    ingress {
+        cidr_blocks = ["0.0.0.0/0"]
+        description = "Allow HTTP"
+        from_port   = 80
+        to_port     = 80
+        protocol    = "tcp"
+    }
 }
+
 
 resource "aws_key_pair" "deployer" {
     key_name   = var.key_name
