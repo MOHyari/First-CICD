@@ -14,6 +14,3 @@ variable "key_name" {
     description = "The name of the key pair"
 }
 
-output "instance_public_ip" {
-  value = aws_instance.your_instance.public_ip
-}
