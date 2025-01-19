@@ -96,21 +96,4 @@ jobs:
               run: |
                 docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
                 docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG  # Don't forget to push the image
-      
-            - name: Deploy to EC2
-              uses: appleboy/ssh-action@master
-              with:
-                host: ${{ env.SERVER_PUBLIC_IP }} 
-                username: ubuntu 
-                key: ${{ secrets.AWS_SSH_KEY_PRIVATE }}  # Use secrets for the private key
-                envs: PRIVATE_SSH_KEY,REGISTRY,REPOSITORY,IMAGE_TAG,AWS_ACCESS_KEY,AWS_SECRET_ACCESS_KEY,AWS_DEFAULT_REGION,AWS_REGION
-                script: |  
-                  sudo apt update
-                  sudo apt install docker.io -y 
-                  sudo apt install awscli -y 
-                  # No need to run aws ecr get-login if using the ECR login action
-                  sudo docker stop myappcontainer || true 
-                  sudo docker rm myappcontainer || true 
-                  sudo docker pull $REGISTRY/$REPOSITORY:$IMAGE_TAG
-                  sudo docker run -d --name myappcontainer -p 80:8080 $REGISTRY/$REPOSITORY:$IMAGE_TAG
-      
+    
