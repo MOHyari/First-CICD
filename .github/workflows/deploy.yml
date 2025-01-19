@@ -78,8 +78,10 @@ jobs:
       - name: Login into ECR
         id: login-ecr 
         uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: true  # Mask the Docker password
         env:
-          AWS_REGION: us-east-1 
+          AWS_REGION: us-east-1  # Ensure the region is set
 
       - name: Build, push docker image 
         env: 
@@ -88,6 +90,7 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG  # Don't forget to push the image
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
@@ -100,7 +103,7 @@ jobs:
             sudo apt update
             sudo apt install docker.io -y 
             sudo apt install awscli -y 
-            sudo $(aws ecr get-login --no-include-email --region us-east-1);  # Corrected typo
+            # No need to run aws ecr get-login if using the ECR login action
             sudo docker stop myappcontainer || true 
             sudo docker rm myappcontainer || true 
             sudo docker pull $REGISTRY/$REPOSITORY:$IMAGE_TAG
