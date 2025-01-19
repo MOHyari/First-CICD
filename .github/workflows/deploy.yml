@@ -51,12 +51,14 @@ jobs:
           PUBLIC_SSH_KEY: ${{ secrets.AWS_SSH_KEY_PUBLIC }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-          terraform apply -auto-approve
+          terraform apply -auto-approve \
+          -var="public_key=${{ env.PUBLIC_SSH_KEY }}" \
+          -var="private_key=${{ env.PRIVATE_SSH_KEY }}" \
+          -var="key_name=deployer-key"
         working-directory: ./terraform
 
       - name: Set Output
         id: set-ip
         run: |
-          echo "instance_public_ip=$(terraform output instance_public_ip)" >> $GITHUB_ENV
+          echo "instance_public_ip=$(terraform output -raw instance_public_ip)" >> $GITHUB_OUTPUT
         working-directory: ./terraform
-###
