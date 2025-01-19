@@ -75,15 +75,18 @@ jobs:
             - name: SET IP ENV var
               run: echo "SERVER_PUBLIC_IP=${{ needs.deploy-infra.outputs.SERVER_PUBLIC_IP }}" >> $GITHUB_ENV
       
+            - name: Debug SERVER_PUBLIC_IP
+              run: echo "SERVER_PUBLIC_IP=${{ needs.deploy-infra.outputs.SERVER_PUBLIC_IP }}"
+      
             - name: Login into ECR
               id: login-ecr 
               uses: aws-actions/amazon-ecr-login@v1
               with:
-                mask-password: true  # Mask the Docker password
+                mask-password: true  
               env:
                 AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
                 AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                AWS_REGION: us-east-1  # or use ${{ secrets.AWS_REGION }} if it's stored in secrets
+                AWS_REGION: us-east-1 
       
             - name: Build, push docker image 
               env: 
@@ -97,11 +100,11 @@ jobs:
             - name: Deploy to EC2
               uses: appleboy/ssh-action@master
               with:
-                host: ${{ env.SERVER_PUBLIC_IP }}  # Corrected input
+                host: ${{ env.SERVER_PUBLIC_IP }} 
                 username: ubuntu 
                 key: ${{ env.PRIVATE_SSH_KEY }}
                 envs: PRIVATE_SSH_KEY,REGISTRY,REPOSITORY,IMAGE_TAG,AWS_ACCESS_KEY,AWS_SECRET_ACCESS_KEY,AWS_DEFAULT_REGION,AWS_REGION
-                script: |  # Corrected input
+                script: |  
                   sudo apt update
                   sudo apt install docker.io -y 
                   sudo apt install awscli -y 
