@@ -39,6 +39,8 @@ jobs:
           -var="public_key=${{ env.PUBLIC_SSH_KEY }}" \
           -var="private_key=${{ env.PRIVATE_SSH_KEY }}" \
           -var="key_name=deployer-key" \
+          -var="aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" \
+          -var="aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
           -out=PLAN
         working-directory: ./terraform
 
@@ -54,9 +56,10 @@ jobs:
           terraform apply -auto-approve \
           -var="public_key=${{ env.PUBLIC_SSH_KEY }}" \
           -var="private_key=${{ env.PRIVATE_SSH_KEY }}" \
-          -var="key_name=deployer-key"
+          -var="key_name=deployer-key" \
+          -var="aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" \
+          -var="aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
         working-directory: ./terraform
-
       - name: Set Output
         id: set-ip
         run: |
